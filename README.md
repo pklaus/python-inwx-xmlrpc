@@ -1,5 +1,4 @@
-# python-inwx-xmlrpc: A Python class to simplify and leverage the communication with the 
-XML-RPC API of InterNetworX via Python.
+# python-inwx-xmlrpc: A Python class to simplify and leverage the communication with the XML-RPC API of InterNetworX via Python.
 
 ## Project Information
 
@@ -41,6 +40,6 @@ for more information on this class and how you can use it.
 
 ## Author
 
-Philipp Klaus <http://www.philippklaus.de>
-
-* philipp.klaus →AT→ gmail.com
+Philipp Klaus
+* Website: <http://www.philippklaus.de>
+* Email: philipp.klaus →AT→ gmail.com

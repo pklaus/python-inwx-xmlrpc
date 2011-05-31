@@ -18,6 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with python-inwx-xmlrpc. If not, see <http://www.gnu.org/licenses/>.
 
+#####################################################################
+######   This file helps to handle the INI-style .cfg files.   ######
+
+
 import sys
 import ConfigParser
 

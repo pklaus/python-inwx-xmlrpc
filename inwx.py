@@ -18,6 +18,13 @@
 # You should have received a copy of the GNU General Public License
 # along with python-inwx-xmlrpc. If not, see <http://www.gnu.org/licenses/>.
 
+
+#####################################################################
+######   This the most important file of the project:         #######
+######   It contains the classes inwx and domrobot, which     #######
+######   implement the XML-RPC communication with the         #######
+######   InterNetworX API.                                    #######
+
 from time import time
 from xmlrpclib import ServerProxy, Fault, ProtocolError, _Method
 from hashlib import sha256

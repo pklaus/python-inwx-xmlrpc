@@ -18,6 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with python-inwx-xmlrpc. If not, see <http://www.gnu.org/licenses/>.
 
+#####################################################################
+######   This is an example of how to use the inwx class to   #######
+######   update a DNS entry via the InterNetworX XMLRPC API.  #######
+
 from inwx import inwx
 from configuration import get_account_data, get_domain_update
 
