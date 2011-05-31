@@ -24,6 +24,7 @@
 
 import sys
 import ConfigParser
+from os.path import expanduser
 
 def get_account_data(print_errors = False, config_file = 'account.cfg', config_section = 'main_account'):
     """
@@ -63,6 +64,26 @@ def get_domain_update(print_errors=False, config_file = 'ip-updates.cfg', config
         else:
             raise NameError(message)
     return domain, subdomain, new_ip
+
+def get_nsbackup_files(print_errors=False, config_file = 'nsbackup.cfg', config_section = 'all_domains'):
+    config = open_config_file(print_errors, config_file)
+    backup_files = dict()
+    try:
+        backup_files['json_backup_file'] = expanduser(config.get(config_section, 'json_backup_file'))
+    except:
+        pass
+    try:
+        backup_files['pickle_backup_file'] = expanduser(config.get(config_section, 'pickle_backup_file'))
+    except:
+        pass
+    if len(backup_files) == 0 :
+        message = 'Error: Please make sure your config file %s contains the section %s with the entries "json_backup_file" or "pickle_backup_file".' % (config_file, config_section)
+        if print_errors:
+            print message
+            sys.exit(2)
+        else:
+            raise NameError(message)
+    return backup_files
 
 def open_config_file(print_errors, config_file):
     config = ConfigParser.ConfigParser()

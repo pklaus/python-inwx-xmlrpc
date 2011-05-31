@@ -1,0 +1,3 @@
+[all_domains]
+json_backup_file = ~/nameserver.backup.json
+pickle_backup_file = ~/nameserver.backup.pickle
