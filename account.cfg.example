@@ -1,0 +1,11 @@
+[main_account]
+api_url = https://api.domrobot.com/xmlrpc
+username = your_username
+password = your_password
+secure = True
+
+[ote_account]
+api_url = https://api.ote.domrobot.com/xmlrpc
+username = your_ote_account_username
+password = your_ote_account_password
+secure = True

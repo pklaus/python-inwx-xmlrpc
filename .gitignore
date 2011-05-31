@@ -1,0 +1,4 @@
+*.pyc
+Makefile
+*.cfg
+*.swp

@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+# -*- encoding: UTF8 -*-
+
+# author: Philipp Klaus, philipp.klaus →AT→ gmail.com
+
+# This file is part of python-inwx-xmlrpc.
+#
+# python-inwx-xmlrpc is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# python-inwx-xmlrpc is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with python-inwx-xmlrpc. If not, see <http://www.gnu.org/licenses/>.
+
+from inwx import inwx
+from configuration import get_account_data
+
+def main():
+    api_url, username, password, secure = get_account_data(True)
+    inwx_conn = inwx(api_url, username, password)
+    print inwx_conn.nameserver.list()
+
+if __name__ == '__main__':
+    main()
