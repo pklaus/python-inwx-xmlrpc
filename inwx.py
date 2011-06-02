@@ -30,6 +30,7 @@ from xmlrpclib import ServerProxy, Fault, ProtocolError, _Method
 from hashlib import sha256
 
 VALID_OBJECTNAMES = ['contact', 'domain', 'nameserver', 'nameserverset', 'accounting', 'host', 'pdf', 'message', 'application']
+MAX_RETRIES = 10
 
 class domrobot (ServerProxy):
     def __init__ (self, address, username=False, password=False, language='en', secure=True, verbose=False):
@@ -56,22 +57,31 @@ class domrobot (ServerProxy):
             self.__params['pass'] = self.__password
         if len(params)>0 and type(params[0]) is dict: self.__params.update(params[0])
         method_function = ServerProxy.__getattr__(self,methodname)
-        try:
-            response = method_function(self.__params)
-        except Fault, err:
-            raise NameError("Fault", err)
-        except ProtocolError, err:
-            raise NameError("ProtocolError", err)
-        except Exception, err:
-            raise NameError("Some other error occured, presumably with the network connection to %s" % self.__address, err)
-        if 'Command completed successfully' in response['msg'] or response['code'] < 2000:
+        # we need this endless loop because of random 2202 errors:
+        tries = 0
+        while True:
+            tries += 1
+            if tries > MAX_RETRIES: break
+            if tries > MAX_RETRIES/2: time.sleep(0.05)
             try:
-                return response['resData']
-            except:
-                # not all requests send a response
-                return None
-        else:
-            raise NameError('There was a problem: %s (Error code %s)' % (response['msg'], response['code']), response)
+                response = method_function(self.__params)
+            except Fault, err:
+                raise NameError("Fault", err)
+            except ProtocolError, err:
+                raise NameError("ProtocolError", err)
+            except Exception, err:
+                raise NameError("Some other error occured, presumably with the network connection to %s" % self.__address, err)
+            if 'Command completed successfully' in response['msg'] or response['code'] < 2000:
+                try:
+                    return response['resData']
+                except:
+                    # not all requests send a response
+                    return None
+            elif 'Invalid authorization information' in response['msg'] or response['code'] == 2202:
+                break
+            else:
+                raise NameError('There was a problem: %s (Error code %s)' % (response['msg'], response['code']), response)
+        raise NameError('There was a problem: %ix \'Invalid authorization information\' (Error code 2202)' % MAX_RETRIES)
 
 # The inwx class enables easy access to the objects of the InterNetworX XML-RPC API.
 class inwx (object):
