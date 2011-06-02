@@ -38,7 +38,7 @@ def get_account_data(print_errors = False, config_file = 'account.cfg', config_s
         username = config.get(config_section, 'username')
         password = config.get(config_section, 'password')
         try:
-            secure = boolean(config.get(config_section, 'secure'))
+            secure = {'true': True, 'false': False}.get(config.get(config_section, 'secure').lower())
         except:
             secure = True
     except Exception, err:
