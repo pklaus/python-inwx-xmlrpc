@@ -32,7 +32,7 @@ def main():
     api_url, username, password, secure = get_account_data(True)
     domain, subdomain, default_ip = get_domain_update(True)
     try:
-        new_ip = urlopen(IPV6_DETECTION_API).readlines()[0]
+        new_ip = urlopen(IPV6_DETECTION_API).read().decode('ascii')
     except:
         # If something failed with the IPv6 detection, we may abort at this point
         return
