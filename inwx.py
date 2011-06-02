@@ -64,7 +64,7 @@ class domrobot (ServerProxy):
             raise NameError("ProtocolError", err)
         except Exception, err:
             raise NameError("Some other error occured, presumably with the network connection to %s" % self.__address, err)
-        if response['msg'] == 'Command completed successfully' or response['code'] == 1000:
+        if 'Command completed successfully' in response['msg'] or response['code'] < 2000:
             try:
                 return response['resData']
             except:
@@ -114,4 +114,16 @@ class prettyprint (object):
         output = "\n%i domains:\n" % len(domains)
         for domain in domains:
             output += "Domain: %s (Type: %s)\n" % (domain['domain'], domain['type'])
+        return output
+
+    @staticmethod
+    def nameserversets(nameserversets):
+        """
+        list namerserversets:  The list of nameserversets to be pretty printed.
+        """
+        count, total = 0, len(nameserversets)
+        output = "\n%i nameserversets:\n" % total
+        for nameserverset in nameserversets:
+            count += 1
+            output += "%i of %i - ID: %i consisting of [%s]\n" % (count, total, nameserverset['id'], ", ".join(nameserverset['ns']))
         return output
