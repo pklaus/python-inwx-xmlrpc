@@ -89,3 +89,29 @@ class inwx (object):
             if name not in self.__robots.keys():
                 self.__robots[name] = domrobot(self.__address+'/'+name, self.__username, self.__password, self.__language, self.__secure, self.__verbose)
             return self.__robots[name]
+
+
+class prettyprint (object):
+    """
+    This object is just a collection of prettyprint helper functions for the output of the XML-API.
+    """
+
+    @staticmethod
+    def contacts(contacts):
+        """
+        iterable contacts:  The list of contacts to be printed.
+        """
+        output = "\nCurrently you have %i contacts set up for your account at InterNetworX:\n\n" % len(contacts)
+        for contact in contacts:
+            output += "ID: %s\nType: %s\n%s\n%s\n%s %s\n%s\n%s\nTel: %s\n------\n" % (contact['id'], contact['type'], contact['name'], contact['street'], contact['pc'], contact['city'], contact['cc'], contact['email'], contact['voice'])
+        return output
+
+    @staticmethod
+    def domains(domains):
+        """
+        list domains:  The list of domains to be pretty printed.
+        """
+        output = "\n%i domains:\n" % len(domains)
+        for domain in domains:
+            output += "Domain: %s (Type: %s)\n" % (domain['domain'], domain['type'])
+        return output
