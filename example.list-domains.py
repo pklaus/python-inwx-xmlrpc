@@ -27,7 +27,7 @@ from configuration import get_account_data
 
 def main():
     api_url, username, password, secure = get_account_data(True)
-    inwx_conn = inwx(api_url, username, password)
+    inwx_conn = inwx(api_url, username, password, 'en', secure, False)
     print inwx_conn.nameserver.list()
 
 if __name__ == '__main__':

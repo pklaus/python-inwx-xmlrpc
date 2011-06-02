@@ -33,7 +33,7 @@ def main():
     if 'json_backup_file' in backup_files.keys():
         import json
     # Instantiate the inwx class (does not connect yet but dispatches calls to domrobot objects with the correct API URL
-    inwx_conn = inwx(api_url, username, password, 'en', secure)
+    inwx_conn = inwx(api_url, username, password, 'en', secure, False)
     # get the list of all domains:
     domains = inwx_conn.nameserver.list()['domains']
     # get all the nameserver entries for each domain

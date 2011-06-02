@@ -29,7 +29,7 @@ def main():
     api_url, username, password, secure = get_account_data(True)
     domain, subdomain, new_ip = get_domain_update(True)
     # Instantiate the inwx class (does not connect yet but dispatches calls to domrobot objects with the correct API URL
-    inwx_conn = inwx(api_url, username, password, 'en', secure)
+    inwx_conn = inwx(api_url, username, password, 'en', secure, False)
     # get all the nameserver entries for a certain domain 
     nsentries = inwx_conn.nameserver.info({'domain': domain})
     for record in nsentries['record']:
