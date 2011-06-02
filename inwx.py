@@ -50,7 +50,7 @@ class domrobot (ServerProxy):
         self.__params['lang'] = self.__language
         if self.__secure: # transmit password in secure-mode
             nonce = time()
-            self.__params['pass']=sha256(str(nonce)+self.__password).hexdigest() # sha256 hash of the nonce and the password
+            self.__params['pass']=sha256(("%.2f" % nonce + self.__password).encode('ascii')).hexdigest() # sha256 hash of the nonce and the password
             self.__params['nonce']=nonce
         else:
             self.__params['pass'] = self.__password
