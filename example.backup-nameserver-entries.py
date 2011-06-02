@@ -42,14 +42,14 @@ def main():
     for domain in domains:
         current += 1
         domain = domain['domain']
-        print("%i of %i - Currently backing up %s." % (current, total, domain))
+        print "%i of %i - Currently backing up %s." % (current, total, domain)
         nsentries[domain] = inwx_conn.nameserver.info({'domain': domain})['record']
     if 'pickle_backup_file' in backup_files.keys():
         Pickler(open(backup_files['pickle_backup_file'],'wb')).dump(nsentries)
-        print("Wrote backup file using Python Module Pickle : %s." % backup_files['pickle_backup_file'])
+        print "Wrote backup file using Python Module Pickle : %s." % backup_files['pickle_backup_file']
     if 'json_backup_file' in backup_files.keys():
         json.dump(nsentries, open(backup_files['json_backup_file'], 'w'))
-        print("Wrote backup file using Python Module JSON: %s." % backup_files['json_backup_file'])
+        print "Wrote backup file using Python Module JSON: %s." % backup_files['json_backup_file']
 
 if __name__ == '__main__':
     main()
