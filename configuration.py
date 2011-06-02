@@ -26,7 +26,7 @@ import sys
 import ConfigParser
 from os.path import expanduser
 
-def get_account_data(print_errors = False, config_file = 'account.cfg', config_section = 'main_account'):
+def get_account_data(print_errors = False, config_file = 'python-inwx-xmlrpc.cfg', config_section = 'main_account'):
     """
     boolean print_errors:   Print errors to stdout instead of raising an exception.
     string config_file:     The name of the configuration file.
@@ -50,7 +50,7 @@ def get_account_data(print_errors = False, config_file = 'account.cfg', config_s
             raise NameError(message)
     return (api_url, username, password, secure)
 
-def get_domain_update(print_errors=False, config_file = 'ip-updates.cfg', config_section = 'main_update'):
+def get_domain_update(print_errors=False, config_file = 'python-inwx-xmlrpc.cfg', config_section = 'automatic_nameserver_entry_update'):
     config = open_config_file(print_errors, config_file)
     try:
         domain = config.get(config_section, 'domain')
@@ -65,7 +65,21 @@ def get_domain_update(print_errors=False, config_file = 'ip-updates.cfg', config
             raise NameError(message)
     return domain, subdomain, new_ip
 
-def get_nsbackup_files(print_errors=False, config_file = 'nsbackup.cfg', config_section = 'all_domains'):
+def get_invoices_folder(print_errors=False, config_file = 'python-inwx-xmlrpc.cfg', config_section = 'invoices_folder'):
+    config = open_config_file(print_errors, config_file)
+    try:
+        invoices_folder = expanduser(config.get(config_section, 'invoices_folder'))
+    except:
+        message = 'Error: Please make sure your config file %s contains the section %s with the entry "invoices_folder".' % (config_file, config_section)
+        if print_errors:
+            print message
+            sys.exit(2)
+        else:
+            raise NameError(message)
+    return invoices_folder
+
+
+def get_nsbackup_files(print_errors=False, config_file = 'python-inwx-xmlrpc.cfg', config_section = 'nameserver_backup'):
     config = open_config_file(print_errors, config_file)
     backup_files = dict()
     try:
