@@ -2,3 +2,5 @@
 Makefile
 *.cfg
 *.swp
+*.bak
+xmlrpc.pdf
