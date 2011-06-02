@@ -13,7 +13,7 @@ secure = True
 [automatic_nameserver_entry_update]
 domain = example.com
 subdomain = laptop.dyndns.example.com
-new_ip = 2001:db8:d4:a000:f174:7b5c:1ffd:f7f3
+default_ip = 2001:db8:d4:a000:f174:7b5c:1ffd:f7f3
 
 
 [nameserver_backup]

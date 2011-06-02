@@ -55,15 +55,15 @@ def get_domain_update(print_errors=False, config_file = 'python-inwx-xmlrpc.cfg'
     try:
         domain = config.get(config_section, 'domain')
         subdomain = config.get(config_section, 'subdomain')
-        new_ip = config.get(config_section, 'new_ip')
+        default_ip = config.get(config_section, 'default_ip')
     except Exception, err:
-        message = 'Error: Please make sure your config file %s contains the section %s with the entries "domain", "subdomain" and "new_ip".' % (config_file, config_section)
+        message = 'Error: Please make sure your config file %s contains the section %s with the entries "domain", "subdomain" and "default_ip".' % (config_file, config_section)
         if print_errors:
             print message
             sys.exit(2)
         else:
             raise NameError(message)
-    return domain, subdomain, new_ip
+    return domain, subdomain, default_ip
 
 def get_invoices_folder(print_errors=False, config_file = 'python-inwx-xmlrpc.cfg', config_section = 'invoices_folder'):
     config = open_config_file(print_errors, config_file)
