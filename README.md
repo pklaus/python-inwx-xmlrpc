@@ -12,12 +12,13 @@ email!
 
 ## Required Python modules
 
-This project uses the standard python modules time, xmlrpclib, hashlib, ConfigParser and sys.
+The software is tested and known to work well on **Python 2.7.1** on Mac OS X 10.6.7.
+It should, however, work on any operating system that supports python.
+I also tested it on **Python 3.2** after converting the files using `2to3-3.2 -w -n *.py`. All examples were tested afterwards and found to be functional.
+
+Python modules used in this software include the standard modules time, xmlrpclib, hashlib, ConfigParser and sys.
 
 ## Installation and Usage
-
-The software is tested and known to work on Python 2.7.1 on Mac OS X 10.6.7.
-It should, however, work on any operating system that supports python.
 
 1. Get the source code of the project (via .tar.gz or .zip download or via git).
 2. Duplicate the configuration file `account.cfg.example` to `account.cfg` and change it to your credentials.
