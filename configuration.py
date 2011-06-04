@@ -18,8 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with python-inwx-xmlrpc. If not, see <http://www.gnu.org/licenses/>.
 
-#####################################################################
-######   This file helps to handle the INI-style .cfg files.   ######
+###########################################################################
+######   This file helps to handle the INI-style .cfg files.         ######
+######   You only need it if you want to test the example scripts.   ######
+######   It is not needed if you just want to use the inwx class...  ######
 
 
 import sys
