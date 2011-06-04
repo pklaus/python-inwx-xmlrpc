@@ -138,3 +138,16 @@ class prettyprint (object):
             count += 1
             output += "%i of %i - ID: %i consisting of [%s]\n" % (count, total, nameserverset['id'], ", ".join(nameserverset['ns']))
         return output
+
+    @staticmethod
+    def domain_log(logs):
+        """
+        list logs:  The list of nameserversets to be pretty printed.
+        """
+        count, total = 0, len(logs)
+        output = "\n%i log entries:\n" % total
+        for log in logs:
+            count += 1
+            output += "%i of %i - %s status: '%s' price: %.2f invoice: %s date: %s remote address: %s\n" % (count, total, log['domain'], log['status'], log['price'], log['invoice'], log['date'], log['remoteAddr'])
+            output += "           user text: '%s'\n" % log['userText'].replace("\n",'\n           ')
+        return output
