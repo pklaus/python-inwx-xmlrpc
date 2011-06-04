@@ -31,6 +31,7 @@ from hashlib import sha256
 
 VALID_OBJECTNAMES = ['contact', 'domain', 'nameserver', 'nameserverset', 'accounting', 'host', 'pdf', 'message', 'application']
 MAX_RETRIES = 10
+SLEEPTIME = 0.01
 
 class domrobot (ServerProxy):
     def __init__ (self, address, username=False, password=False, language='en', secure=True, verbose=False):
@@ -46,23 +47,23 @@ class domrobot (ServerProxy):
         return _Method(self.__request, name)
  
     def __request (self, methodname, params):
-        self.__params = dict()
-        self.__params['user'] = self.__username
-        self.__params['lang'] = self.__language
-        if self.__secure: # transmit password in secure-mode
-            nonce = time()
-            self.__params['pass']=sha256(("%.2f" % nonce + self.__password).encode('ascii')).hexdigest() # sha256 hash of the nonce and the password
-            self.__params['nonce']=nonce
-        else:
-            self.__params['pass'] = self.__password
-        if len(params)>0 and type(params[0]) is dict: self.__params.update(params[0])
         method_function = ServerProxy.__getattr__(self,methodname)
         # we need this endless loop because of random 2202 errors:
         tries = 0
         while True:
             tries += 1
             if tries > MAX_RETRIES: break
-            if tries > MAX_RETRIES/2: time.sleep(0.05)
+            if tries > MAX_RETRIES/2: time.sleep(SLEEPTIME)
+            self.__params = dict()
+            self.__params['user'] = self.__username
+            self.__params['lang'] = self.__language
+            if self.__secure: # transmit password in secure-mode
+                nonce = time()
+                self.__params['pass']=sha256(("%.2f" % nonce + self.__password).encode('ascii')).hexdigest() # sha256 hash of the nonce and the password
+                self.__params['nonce']=nonce
+            else:
+                self.__params['pass'] = self.__password
+            if len(params)>0 and type(params[0]) is dict: self.__params.update(params[0])
             try:
                 response = method_function(self.__params)
             except Fault, err:
