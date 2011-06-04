@@ -4,3 +4,4 @@ Makefile
 *.swp
 *.bak
 xmlrpc.pdf
+example.playground.py
