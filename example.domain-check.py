@@ -28,7 +28,7 @@ from configuration import get_account_data
 def main():
     api_url, username, password = get_account_data(True)
     inwx_conn = domrobot(api_url, username, password, 'en', False)
-    print prettyprint.nameserversets(inwx_conn.nameserverset.list()['nsset'])
+    print prettyprint.domain_check(inwx_conn.domain.check({'domain': "klaus.bz"}))
 
 if __name__ == '__main__':
     main()

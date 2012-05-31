@@ -22,15 +22,15 @@
 ######   This is an example of how to use the inwx class to back      #######
 ######   download all your invoices via the InterNetworX XMLRPC API.  #######
 
-from inwx import inwx
+from inwx import domrobot
 from configuration import get_account_data, get_invoices_folder
 from os.path import isfile
 
 def main():
-    api_url, username, password, secure = get_account_data(True)
+    api_url, username, password = get_account_data(True)
     invoices_folder = get_invoices_folder(True)
     # Instantiate the inwx class (does not connect yet but dispatches calls to domrobot objects with the correct API URL
-    inwx_conn = inwx(api_url, username, password, 'en', secure, False)
+    inwx_conn = domrobot(api_url, username, password, 'en', False)
     # get the list of all invoices up to now
     invoices = inwx_conn.accounting.listInvoices()
     # download each invoice (if not already downloaded)

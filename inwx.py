@@ -2,6 +2,7 @@
 # -*- encoding: UTF8 -*-
 
 # author: Philipp Klaus, philipp.klaus →AT→ gmail.com
+# author: InterNetworX, info →AT→ inwx.de
 
 # This file is part of python-inwx-xmlrpc.
 #
@@ -25,37 +26,24 @@
 ######   implement the XML-RPC communication with the         #######
 ######   InterNetworX API.                                    #######
 
-from time import time
-from xmlrpclib import ServerProxy, Fault, ProtocolError, _Method
-from hashlib import sha256
-
-VALID_OBJECTNAMES = ['contact', 'domain', 'nameserver', 'nameserverset', 'accounting', 'host', 'pdf', 'message', 'application']
+from xmlrpclib import ServerProxy, Fault, ProtocolError, _Method, SafeTransport
 
 class domrobot (ServerProxy):
-    def __init__ (self, address, username=False, password=False, language='en', secure=True, verbose=False):
+    def __init__ (self, address, username=None, password=None, language='en', verbose=False):
         self.__address = address
-        self.__username = username
-        self.__password = password
-        self.__language = language
-        self.__secure = secure
-        #super(domrobot, self).__init__(address, verbose=debug)
-        ServerProxy.__init__(self, address,verbose=verbose)
-   
+        #super(domrobot, self).__init__(address, transport=InwxTransport(), encoding = "UTF-8", verbose=verbose)
+        ServerProxy.__init__(self, address, transport=InwxTransport(), encoding = "UTF-8", verbose=verbose)
+        self.account.login({'lang': language, 'user': username, 'pass': password})
+
     def __getattr__(self,name):
         return _Method(self.__request, name)
- 
+
     def __request (self, methodname, params):
         method_function = ServerProxy.__getattr__(self,methodname)
         self.__params = dict()
-        self.__params['user'] = self.__username
-        self.__params['lang'] = self.__language
-        if self.__secure: # transmit password in secure-mode
-            nonce = "%.8f" % time()
-            self.__params['pass']=sha256((nonce + self.__password).encode('ascii')).hexdigest() # sha256 hash of the nonce and the password
-            self.__params['nonce']=nonce
-        else:
-            self.__params['pass'] = self.__password
-        if len(params)>0 and type(params[0]) is dict: self.__params.update(params[0])
+        if params and type(params) is tuple and len(params)>0 and type(params[0]) is dict:
+            self.__params.update(params[0])
+
         try:
             response = method_function(self.__params)
         except Fault, err:
@@ -64,7 +52,7 @@ class domrobot (ServerProxy):
             raise NameError("ProtocolError", err)
         except Exception, err:
             raise NameError("Some other error occured, presumably with the network connection to %s" % self.__address, err)
-        if 'Command completed successfully' in response['msg'] or response['code'] < 2000:
+        if response['code'] < 2000:
             try:
                 return response['resData']
             except:
@@ -73,23 +61,62 @@ class domrobot (ServerProxy):
         else:
             raise NameError('There was a problem: %s (Error code %s)' % (response['msg'], response['code']), response)
 
-# The inwx class enables easy access to the objects of the InterNetworX XML-RPC API.
-class inwx (object):
-    def __init__ (self, address, username=False, password=False, language='en', secure=True, verbose=False):
-        self.__address = address
-        self.__username = username
-        self.__password = password
-        self.__language = language
-        self.__secure = secure
-        self.__verbose = verbose
-        self.__robots = dict()
-    # The main use of this class is to dispatch calls to domrobot instances (each having its own API URL):
-    def __getattr__(self,name):
-        if name in VALID_OBJECTNAMES:
-            if name not in self.__robots.keys():
-                self.__robots[name] = domrobot(self.__address+'/'+name, self.__username, self.__password, self.__language, self.__secure, self.__verbose)
-            return self.__robots[name]
+##
+# Adds Cookie support to the SafeTransport class:
 
+class InwxTransport(SafeTransport):
+    user_agent = "DomRobot/1.0 Python python-inwx-xmlrpc"
+    __cookie = None
+
+    def single_request(self, host, handler, request_body, verbose=0):
+        # This method is almost the same as:
+        # http://hg.python.org/cpython/file/2.7/Lib/xmlrpclib.py#l1281
+
+        h = self.make_connection(host)
+        if verbose:
+            h.set_debuglevel(1)
+
+        try:
+            self.send_request(h, handler, request_body)
+            self.send_host(h, host)
+            self.send_user_agent(h)
+            self.send_content(h, request_body)
+
+            response = h.getresponse(buffering=True)
+            ## for debugging:
+            #print(host, handler)
+            #print(request_body)
+            #print(response.getheaders())
+            #print(response.read())
+            if response.status == 200:
+                self.verbose = verbose
+                cookie_header = response.getheader('set-cookie')
+                if cookie_header: self.__cookie = cookie_header
+                return self.parse_response(response)
+        except Fault:
+            raise
+        except Exception:
+            # All unexpected errors leave connection in
+            # a strange state, so we clear it.
+            self.close()
+            raise
+        #discard any response data and raise exception
+        if (response.getheader("content-length", 0)):
+            response.read()
+        raise ProtocolError(
+            host + handler,
+            response.status, response.reason,
+            response.msg,
+            )
+
+    def send_content(self, connection, request_body):
+        # This method is almost the same as:
+        # http://hg.python.org/cpython/file/2.7/Lib/xmlrpclib.py#l1428
+        connection.putheader("Content-Type", "text/xml")
+        connection.putheader("Content-Length", str(len(request_body)))
+        if self.__cookie:
+            connection.putheader("Cookie", self.__cookie)
+        connection.endheaders(request_body)
 
 class prettyprint (object):
     """
@@ -139,4 +166,16 @@ class prettyprint (object):
             count += 1
             output += "%i of %i - %s status: '%s' price: %.2f invoice: %s date: %s remote address: %s\n" % (count, total, log['domain'], log['status'], log['price'], log['invoice'], log['date'], log['remoteAddr'])
             output += "           user text: '%s'\n" % log['userText'].replace("\n",'\n           ')
+        return output
+    
+    @staticmethod
+    def domain_check(checks):
+        """
+        list checks:  The list of domain checks to be pretty printed.
+        """
+        count, total = 0, len(checks)
+        output = "\n%i domain check(s):\n" % total
+        for check in checks['domain']:
+            count += 1
+            output += "%s = %s" % (check['domain'], check['status'])
         return output

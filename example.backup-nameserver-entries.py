@@ -22,18 +22,18 @@
 ######   This is an example of how to use the inwx class to back   #######
 ######   up all your DNS entries via the InterNetworX XMLRPC API.  #######
 
-from inwx import inwx
+from inwx import domrobot
 from configuration import get_account_data, get_nsbackup_files
 
 def main():
-    api_url, username, password, secure = get_account_data(True)
+    api_url, username, password = get_account_data(True)
     backup_files = get_nsbackup_files(True)
     if 'pickle_backup_file' in backup_files.keys():
         from pickle import Pickler
     if 'json_backup_file' in backup_files.keys():
         import json
     # Instantiate the inwx class (does not connect yet but dispatches calls to domrobot objects with the correct API URL
-    inwx_conn = inwx(api_url, username, password, 'en', secure, False)
+    inwx_conn = domrobot(api_url, username, password, 'en', False)
     # get the list of all domains:
     domains = inwx_conn.nameserver.list()['domains']
     # get all the nameserver entries for each domain

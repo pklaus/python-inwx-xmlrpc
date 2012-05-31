@@ -1,20 +1,18 @@
-[main_account]
-api_url = https://api.domrobot.com/xmlrpc
+[live]
+url = https://api.domrobot.com/xmlrpc/
 username = your_username
 password = your_password
-secure = True
 
-[ote_account]
-api_url = https://api.ote.domrobot.com/xmlrpc
+[ote]
+url = https://api.ote.domrobot.com/xmlrpc/
 username = your_ote_account_username
 password = your_ote_account_password
-secure = True
+
 
 [automatic_nameserver_entry_update]
 domain = example.com
 subdomain = laptop.dyndns.example.com
 default_ip = 2001:db8:d4:a000:f174:7b5c:1ffd:f7f3
-
 
 [nameserver_backup]
 json_backup_file = ~/nameserver.backup.json

@@ -22,14 +22,14 @@
 ######   This is an example of how to use the inwx class to   #######
 ######   update a DNS entry via the InterNetworX XMLRPC API.  #######
 
-from inwx import inwx
+from inwx import domrobot
 from configuration import get_account_data, get_domain_update
 from urllib import urlopen
 
 IPV6_DETECTION_API = 'http://v6.ipv6-test.com/api/myip.php'
 
 def main():
-    api_url, username, password, secure = get_account_data(True)
+    api_url, username, password = get_account_data(True)
     domain, subdomain, default_ip = get_domain_update(True)
     try:
         new_ip = urlopen(IPV6_DETECTION_API).read().decode('ascii')
@@ -39,7 +39,7 @@ def main():
         # or simply set the default value:
         new_ip = default_ip
     # Instantiate the inwx class (does not connect yet but dispatches calls to domrobot objects with the correct API URL
-    inwx_conn = inwx(api_url, username, password, 'en', secure, False)
+    inwx_conn = domrobot(api_url, username, password, 'en', False)
     # get all the nameserver entries for a certain domain 
     nsentries = inwx_conn.nameserver.info({'domain': domain})
     for record in nsentries['record']:

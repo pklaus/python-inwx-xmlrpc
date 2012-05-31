@@ -28,7 +28,7 @@ import sys
 import ConfigParser
 from os.path import expanduser
 
-def get_account_data(print_errors = False, config_file = 'python-inwx-xmlrpc.cfg', config_section = 'main_account'):
+def get_account_data(print_errors = False, config_file = 'python-inwx-xmlrpc.cfg', config_section = 'live'):
     """
     boolean print_errors:   Print errors to stdout instead of raising an exception.
     string config_file:     The name of the configuration file.
@@ -36,21 +36,17 @@ def get_account_data(print_errors = False, config_file = 'python-inwx-xmlrpc.cfg
     """
     config = open_config_file(print_errors, config_file)
     try:
-        api_url = config.get(config_section, 'api_url')
+        api_url = config.get(config_section, 'url')
         username = config.get(config_section, 'username')
         password = config.get(config_section, 'password')
-        try:
-            secure = {'true': True, 'false': False}.get(config.get(config_section, 'secure').lower())
-        except:
-            secure = True
     except Exception, err:
-        message = 'Error: Please make sure your config file %s contains the section %s with the entries "api_url", "username" and "password".' % (config_file, config_section)
+        message = 'Error: Please make sure your config file %s contains the section %s with the entries "url", "username" and "password".' % (config_file, config_section)
         if print_errors:
             print message
             sys.exit(2)
         else:
             raise NameError(message)
-    return (api_url, username, password, secure)
+    return (api_url, username, password)
 
 def get_domain_update(print_errors=False, config_file = 'python-inwx-xmlrpc.cfg', config_section = 'automatic_nameserver_entry_update'):
     config = open_config_file(print_errors, config_file)

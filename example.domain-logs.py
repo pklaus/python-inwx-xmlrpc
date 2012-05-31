@@ -22,13 +22,13 @@
 #######    This is an example of how to use the inwx class to      ########
 #######    list all your domains via the InterNetworX XMLRPC API.  ########
 
-from inwx import inwx, prettyprint
+from inwx import domrobot, prettyprint
 from configuration import get_account_data
 import json
 
 def main():
-    api_url, username, password, secure = get_account_data(True)
-    inwx_conn = inwx(api_url, username, password, 'en', secure, False)
+    api_url, username, password = get_account_data(True)
+    inwx_conn = domrobot(api_url, username, password, 'en', False)
     print prettyprint.domains(inwx_conn.nameserver.list()['domains'])
     # get the list of all domains:
     domains = inwx_conn.nameserver.list()['domains']
