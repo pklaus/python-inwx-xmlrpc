@@ -4,6 +4,6 @@ username = your_username
 password = your_password
 
 [automatic_nameserver_entry_update]
-domain = ding.si
-subdomain = mactest.ding.si
+domain = example.com
+subdomain = subdomain.example.com
 default_ip = 127.0.0.1
