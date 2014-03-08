@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 # -*- encoding: UTF8 -*-
 
 # author: Philipp Klaus, philipp.klaus →AT→ gmail.com
